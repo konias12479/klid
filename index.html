@@ -795,16 +795,28 @@ function stopSound(instant){
 /* ================= MEDITAČNÍ PODKRES ================= */
 let medMaster = null, medNodes = [];
 function medMusicKind(){ return S.medMusicKind || "rain"; }
-function startMedMusic(){
-  const kind = medMusicKind();
+function startMedMusic(kindOverride, low){
+  const kind = kindOverride || medMusicKind();
   stopMedMusic(true);
   if(kind === "off") return;
   const ctx = audioCtx();
   if(ctx.state === "suspended") ctx.resume();
   medMaster = ctx.createGain();
   medMaster.gain.setValueAtTime(0.0001, ctx.currentTime);
-  medMaster.gain.linearRampToValueAtTime(kind==="alfa"||kind==="theta" ? 0.18 : 0.3, ctx.currentTime + 3);
+  const target = (kind==="alfa"||kind==="theta") ? (low ? 0.11 : 0.18) : (low ? 0.13 : 0.3);
+  medMaster.gain.linearRampToValueAtTime(target, ctx.currentTime + 3);
   medMaster.connect(ctx.destination);
+  if(kind === "pink" || kind === "brown"){
+    /* tichý ambientní šum */
+    const src = ctx.createBufferSource();
+    src.buffer = noiseBuffer(ctx, kind);
+    src.loop = true;
+    const lp = ctx.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = kind === "pink" ? 900 : 500;
+    src.connect(lp); lp.connect(medMaster);
+    src.start();
+    medNodes.push(src, lp);
+    return;
+  }
   if(kind === "alfa" || kind === "theta"){
     const base = 220, beat = kind === "alfa" ? 10 : 6;
     const merger = ctx.createChannelMerger(2);
@@ -868,13 +880,15 @@ function updateMedMusicBtn(){
     waves: "🎚️ Zvuk: Moře",
     alfa:  "🎚️ Zvuk: Alfa vlny",
     theta: "🎚️ Zvuk: Theta vlny",
+    pink:  "🎚️ Zvuk: tichý vánek",
+    brown: "🎚️ Zvuk: tichý vítr",
     off:   "🎚️ Zvuk: jen hlas"
-  }[medMusicKind()];
+  }[medMusicKind()] || "🎚️ Zvuk";
 }
 
 /* ================= MEDITACE ================= */
 const MEDS = [
- {id:"breathwatch", ico:"🌬️", title:"Pozorování dechu", dur:"3 min",
+ {id:"breathwatch", amb:"pink", ico:"🌬️", title:"Pozorování dechu", dur:"3 min",
   steps:[
    ["Sedni si pohodlně. Narovnej záda, ruce polož na stehna. Oči můžeš zavřít, nebo se dívej do jednoho bodu.",15],
    ["Dýchej nosem, přirozeně. Nic neměň — jen sleduj, jak vzduch vchází a odchází.",30],
@@ -882,7 +896,7 @@ const MEDS = [
    ["Přišla myšlenka? To je v pořádku — tak mysl funguje. Všimni si jí a klidně se vrať k dechu.",35],
    ["Myšlenky budou přicházet dál. Pokaždé se vrátíš k dechu. Ten návrat je celé cvičení.",40],
    ["Posledních pár nádechů. Pomalu, klidně. Pak otevři oči.",25]]},
- {id:"bodyscan", ico:"🛌", title:"Projití těla", dur:"4 min",
+ {id:"bodyscan", amb:"waves", ico:"🛌", title:"Projití těla", dur:"4 min",
   steps:[
    ["Lehni si nebo se pohodlně opři. Zavři oči. Třikrát se zhluboka nadechni a vydechni.",20],
    ["Přenes pozornost do chodidel. Cítíš tlak podložky? Teplo, chlad, mravenčení? Jen si všímej.",30],
@@ -892,7 +906,7 @@ const MEDS = [
    ["Obličej. Povol čelist, jazyk, čelo. Obličej smí být úplně měkký.",30],
    ["Teď vnímej celé tělo najednou — od chodidel po temeno. Jeden celek, který dýchá.",40],
    ["Zahýbej prsty, protáhni se a pomalu otevři oči.",15]]},
- {id:"ground", ico:"🌍", title:"Uzemnění 5-4-3-2-1", dur:"2,5 min",
+ {id:"ground", amb:"brown", ico:"🌍", title:"Uzemnění 5-4-3-2-1", dur:"2,5 min",
   steps:[
    ["Tohle cvičení tě vrátí do přítomnosti, když se hlava točí v myšlenkách. Rozhlédni se kolem sebe.",12],
    ["Najdi pět věcí, které vidíš. Pojmenuj si je v duchu, jednu po druhé. Pomalu.",40],
@@ -900,7 +914,7 @@ const MEDS = [
    ["Tři věci, kterých se dotýkáš. Židle pod tebou, oblečení na kůži, podlaha pod nohama.",30],
    ["Dvě vůně, které cítíš. Nebo si vybav dvě, které máš rád.",20],
    ["Jeden pomalý nádech a výdech. Jsi tady. Teď. A tady se dá všechno zvládnout.",15]]},
- {id:"pmr", ico:"💪", title:"Uvolnění svalů", dur:"4 min",
+ {id:"pmr", amb:"brown", ico:"💪", title:"Uvolnění svalů", dur:"4 min",
   steps:[
    ["Princip: sval nejdřív vědomě zatneš, pak povolíš — a on se uvolní hlouběji než předtím. Sedni si nebo si lehni.",15],
    ["Zatni obě pěsti. Pevně. Drž… drž… a povol. Vnímej ten rozdíl.",20],
@@ -911,7 +925,7 @@ const MEDS = [
    ["Zatni stehna, lýtka a prsty u nohou. Drž… a povol. Nohy jsou těžké.",20],
    ["Teď na pět vteřin zatni úplně všechno najednou… a povol. Celé tělo si vydechlo.",25],
    ["Zůstaň chvíli takhle. Tohle uvolnění sis vyrobil sám — bez čehokoli dalšího.",20]]},
- {id:"safeplace", ico:"🏞️", title:"Bezpečné místo", dur:"3 min",
+ {id:"safeplace", amb:"waves", ico:"🏞️", title:"Bezpečné místo", dur:"3 min",
   steps:[
    ["Zavři oči. Vybav si místo, kde ti je dobře. Skutečné, nebo vymyšlené — les, pláž, chata, babiččina kuchyň.",25],
    ["Rozhlédni se tam. Co vidíš vlevo? Co vpravo? Jaké jsou tam barvy a světlo?",30],
@@ -919,7 +933,7 @@ const MEDS = [
    ["Jaká je tam teplota? Cítíš slunce na kůži, nebo příjemný chládek? Nějakou vůni?",30],
    ["Zůstaň tam. Tohle místo máš v hlavě pořád — nikdo ti ho nevezme a můžeš se sem vrátit kdykoli.",35],
    ["Naposledy se rozhlédni, nadechni se a pomalu otevři oči.",20]]},
- {id:"count10", ico:"🔢", title:"Počítání dechů", dur:"3,5 min",
+ {id:"count10", amb:"pink", ico:"🔢", title:"Počítání dechů", dur:"3,5 min",
   steps:[
    ["Sedni si rovně a zavři oči. Budeme počítat výdechy — od deseti k jedné.",12],
    ["Nádech… a s výdechem si v duchu řekni: deset.",15],
@@ -928,7 +942,7 @@ const MEDS = [
    ["Čísla jsou jen věšák na pozornost. Důležitý je dech — pomalý a klidný.",35],
    ["Až dojdeš k jedné, chvíli jen seď v tichu, bez počítání.",30],
    ["Poslední volný nádech a výdech. Otevři oči.",15]]},
- {id:"mountain", ico:"🗻", title:"Hora", dur:"3 min",
+ {id:"mountain", amb:"brown", ico:"🗻", title:"Hora", dur:"3 min",
   steps:[
    ["Sedni si pevně, chodidla na zem, záda rovná. Zavři oči.",12],
    ["Představ si horu. Mohutnou, klidnou, se širokou základnou a pevným vrcholem.",25],
@@ -946,7 +960,7 @@ const MEDS = [
    ["Když tě odnese myšlenka, vrať se k nejbližšímu zvuku.",30],
    ["Na závěr obejmi pozorností všechny zvuky najednou, jako krajinu.",30],
    ["Pomalu otevři oči. Svět zní dál — a ty klidně v něm.",12]]},
- {id:"metta", ico:"💚", title:"Laskavost", dur:"3 min",
+ {id:"metta", amb:"waves", ico:"💚", title:"Laskavost", dur:"3 min",
   steps:[
    ["Sedni si pohodlně, ruku můžeš položit na hrudník. Zavři oči.",12],
    ["V duchu si řekni: Ať jsem v pořádku. Ať mám klid. Ať mi je dobře.",30],
@@ -954,7 +968,7 @@ const MEDS = [
    ["Teď si vybav někoho blízkého a přej totéž jemu: Ať jsi v pořádku. Ať máš klid.",35],
    ["A nakonec zkus totéž přát sobě z minulosti — tomu, kdo dělal chyby. I on se snažil.",40],
    ["Poslední nádech. Laskavost je trénink — roste opakováním.",20]]},
- {id:"leaves", ico:"🍃", title:"Listí na vodě", dur:"3,5 min",
+ {id:"leaves", amb:"waves", ico:"🍃", title:"Listí na vodě", dur:"3,5 min",
   steps:[
    ["Zavři oči a představ si potok. Klidný, s pomalým proudem a listím na hladině.",20],
    ["Každou myšlenku, která přijde, polož na jeden list. Jen ji polož — a nech plout.",30],
@@ -963,7 +977,7 @@ const MEDS = [
    ["Když tě proud strhne a plaveš s myšlenkou, v klidu se vrať na břeh a pokládej dál.",35],
    ["Potok teče dál i bez tebe. Ty jen sedíš na břehu a díváš se.",30],
    ["Otevři oči. Ten břeh máš v hlavě kdykoli po ruce.",12]]},
- {id:"felt", ico:"🫀", title:"Kde to sedí", dur:"4 min",
+ {id:"felt", amb:"pink", ico:"🫀", title:"Kde to sedí", dur:"4 min",
   steps:[
    ["Tohle cvičení hledá odpověď tam, kde bývá — v těle. Sedni si pohodlně a zavři oči.",15],
    ["Třikrát pomalu vydechni. Nech ramena klesnout.",20],
@@ -1040,7 +1054,7 @@ const MEDS = [
    ["Dosednutí může být pevné. Tvrdší dosednutí bývá záměr — na mokré dráze je bezpečnější. Není to chyba.",30],
    ["Po dosednutí motory nahlas zaburácejí — to je zpětný tah, obyčejná brzda. Čím hlasitější, tím rychleji zastavíte.",25],
    ["A je to. Přistál jsi a zvládl jsi celý let. Dýchej — a klidně si zapamatuj: dnešek byl tvůj dobrý den.",20]]},
- {id:"anchor", ico:"⚓", title:"Kotva klidu", dur:"4 min", cat:"n",
+ {id:"anchor", amb:"waves", ico:"⚓", title:"Kotva klidu", dur:"4 min", cat:"n",
   steps:[
    ["Tohle cvičení ti vyrobí kotvu — tělesný spínač klidu, který pak použiješ, kdykoli přijde úzkost. Sedni si pohodlně a zavři oči.",18],
    ["Vybav si chvíli, kdy ti bylo opravdu klidně a bezpečně. Konkrétní moment — místo, světlo, zvuky.",30],
@@ -1050,7 +1064,7 @@ const MEDS = [
    ["A ještě potřetí. Klid… a stisk. Mozek si spojuje: tenhle stisk znamená tohle bezpečí.",35],
    ["Otestuj to: uvolni se, jen stiskni palec a ukazováček — a nech klid přijít sám.",25],
    ["Hotovo. Kotvu posiluj každý den. Až přijde úzkost, stiskni prsty a dýchej dlouhé výdechy.",20]]},
- {id:"shrink", ico:"🔍", title:"Zmenšení strachu", dur:"3,5 min", cat:"n",
+ {id:"shrink", amb:"rain", ico:"🔍", title:"Zmenšení strachu", dur:"3,5 min", cat:"n",
   steps:[
    ["Vyber si jeden konkrétní strach — ne ten největší, něco střední velikosti. Zavři oči.",20],
    ["Všimni si, jak ten strach v hlavě vypadá. Kde ho vidíš? Jak je ten obraz velký, jasný, blízký?",30],
@@ -1059,7 +1073,7 @@ const MEDS = [
    ["Přidej mu směšný detail: pouťovou hudbu, pisklavý hlas, klaunský nos. Strach a směšnost se nesnesou.",30],
    ["Podívej se na ten malý šedý obrázek s hudbou z pouti. Co dělá tvoje tělo teď? Všimni si toho rozdílu.",30],
    ["Kdykoli se strach vrátí v plné velikosti, zopakuj to: zmenšit, odbarvit, odsunout, ozvučit.",25]]},
- {id:"assert", ico:"🗣️", title:"Asertivita", dur:"4 min", cat:"n",
+ {id:"assert", amb:"brown", ico:"🗣️", title:"Asertivita", dur:"4 min", cat:"n",
   steps:[
    ["Asertivita začíná v těle, ne ve slovech. Postav se nebo se posaď zpříma: ramena dolů a dozadu, hlava rovně.",25],
    ["Dýchej do břicha, pomalu. Tenhle postoj drž — tělo učí hlavu, čí je.",25],
@@ -1069,7 +1083,7 @@ const MEDS = [
    ["Teď do scény vstup — už ne jako divák. Prožij ji zevnitř: pevné nohy, klidný hlas, tvá věta.",35],
    ["Přehraj si to ještě jednou. Mozek moc nerozlišuje mezi nacvičeným a skutečným — právě teď trénuješ.",30],
    ["Až situace přijde doopravdy: postoj, nádech, věta. Tělo si vzpomene.",20]]},
- {id:"critic", ico:"🎭", title:"Vnitřní kritik", dur:"3,5 min", cat:"n",
+ {id:"critic", amb:"rain", ico:"🎭", title:"Vnitřní kritik", dur:"3,5 min", cat:"n",
   steps:[
    ["Každý má v hlavě hlas, který ho shazuje: to nezvládneš, zase to pokazíš. Dnes mu změníme práci. Zavři oči.",25],
    ["Vybav si větu, kterou ti kritik říká nejčastěji. Slyš ji tak, jak obvykle zní.",25],
@@ -1078,7 +1092,7 @@ const MEDS = [
    ["A teď dosaď nový hlas: klidného trenéra. Ať řekne: Tohle zvládneš. Krok za krokem. Já ti pomůžu.",35],
    ["Ať to zopakuje tvým vlastním klidným hlasem. Ještě jednou, pomalu a jistě.",30],
    ["Kritika se nezbavíš úplně — ale vždycky mu můžeš změnit hlas. Trenéra si přivolej kdykoli.",25]]},
- {id:"cinema", ico:"🎬", title:"Kino klidu", dur:"4 min", cat:"n",
+ {id:"cinema", amb:"rain", ico:"🎬", title:"Kino klidu", dur:"4 min", cat:"n",
   steps:[
    ["Tohle cvičení oslabuje nepříjemné vzpomínky. Vyber si lehkou — trapas, hádku. Velká zranění patří terapeutovi, ne aplikaci.",30],
    ["Představ si, že sedíš v kině. Sám, pohodlně, v bezpečí. Na plátně začne ta vzpomínka jako starý film.",30],
@@ -1087,7 +1101,7 @@ const MEDS = [
    ["Ještě jednou pozpátku, rychleji. A ještě. Film se zadrhává, bledne, zmenšuje se.",30],
    ["Zkus si teď vybavit původní vzpomínku. Všimni si: už se nespouští sama. Je to jen starý film v archivu.",30],
    ["Sál se rozsvěcí. Vstáváš a odcházíš. Archiv zůstává zamčený — a klíč máš ty.",20]]},
- {id:"morning", ico:"🌅", title:"Ranní nastavení", dur:"2 min", cat:"n",
+ {id:"morning", amb:"pink", ico:"🌅", title:"Ranní nastavení", dur:"2 min", cat:"n",
   steps:[
    ["Krátké ranní cvičení. Sedni si, zavři oči, tři pomalé dechy.",18],
    ["Vyber si z dnešního dne jednu věc, na které záleží. Jedna stačí.",20],
@@ -1111,8 +1125,9 @@ function startMed(i){
   $("med-pick").classList.add("hidden");
   $("med-run").classList.remove("hidden");
   $("med-ov").classList.remove("hidden");
-  /* start hned — jen hlas, podkres až na přání za tlačítkem */
-  S.medMusicKind = "off"; updateMedMusicBtn();
+  /* start hned — s tichým tematickým podkladem; plný podkres za tlačítkem */
+  S.medMusicKind = MEDS[i].amb || "off"; updateMedMusicBtn();
+  startMedMusic(S.medMusicKind, true);
   medRecBlob = null; renderOwnRec();
   getRec(MEDS[i].id).then(b=>{ medRecBlob = b; renderOwnRec(); });
   bgmBlob = null; renderBgm();
@@ -1130,7 +1145,7 @@ function backToRun(){
 function applyPodkres(kind){
   S.medMusicKind = kind; save();
   updateMedMusicBtn();
-  startMedMusic();
+  startMedMusic(kind, false);
   backToRun();
 }
 function renderBgm(){
@@ -1370,6 +1385,7 @@ function startBreathTech(techId){
   const T = TECHS[techId];
   $("breath-ov").classList.remove("hidden");
   $("breath-info").textContent = T.info;
+  startMedMusic("waves", true);   /* tichý podklad i pod dýcháním */
   const circle = $("breath-circle"), label = $("breath-label"), count = $("breath-count");
   let cycle = 0, pi = 0, remaining = T.phases[0][1];
   function setPhase(){
@@ -1392,6 +1408,7 @@ function startBreathTech(techId){
       if(pi>=T.phases.length){ pi=0; cycle++; }
       if(cycle>=T.cycles){
         clearInterval(breathInt);
+        stopMedMusic();
         $("breath-ov").classList.add("hidden");
         S.mindCount = (S.mindCount||0) + 1; save(); renderMeds();
         toast("Dýchání dokončeno. Dobrá práce.");
@@ -1402,7 +1419,7 @@ function startBreathTech(techId){
     } else count.textContent = remaining;
   },1000);
 }
-function stopBreath(){ clearInterval(breathInt); hush(); $("breath-ov").classList.add("hidden"); }
+function stopBreath(){ clearInterval(breathInt); hush(); stopMedMusic(); $("breath-ov").classList.add("hidden"); }
 
 /* ================= START ================= */
 function boot(){
