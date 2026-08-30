@@ -147,6 +147,7 @@
       <button class="root-tile" onclick="openDet('fly')"><span class="r-ico">✈️</span><span class="r-name">Klidný let</span><span class="r-sub">start · turbulence · přistání</span></button>
       <button class="root-tile" onclick="openDet('learn')"><span class="r-ico">📚</span><span class="r-name">Učení</span><span class="r-sub">soustředění · bloky · paměť</span></button>
       <button class="root-tile" onclick="openDet('guides')"><span class="r-ico">📖</span><span class="r-name">Rádce</span><span class="r-sub">úzkost · chutě · motivace · lenost</span></button>
+      <button class="root-tile" onclick="openDet('eyes')"><span class="r-ico">👁️</span><span class="r-name">Oči</span><span class="r-sub">úleva · ostření · trénink</span></button>
     </div>
     <p class="muted" id="mind-count" style="margin-top:14px;text-align:center;font-size:.78rem"></p>
   </div>
@@ -158,6 +159,27 @@
       <div class="sec-h"><h2>📖 Rádce pro těžké chvíle</h2></div>
       <p class="muted" style="line-height:1.5">Konkrétní postup pro konkrétní situaci. Otevři a jdi krok za krokem — a kde to jde, rovnou spustíš i cvičení, které pomáhá.</p>
       <div id="guide-list" style="margin-top:4px"></div>
+    </div>
+  </div>
+
+  <div class="section" id="det-eyes">
+    <button class="btn ghost small" style="margin-bottom:12px" onclick="goHome()">← Menu</button>
+    <div class="card">
+      <div class="sec-h"><h2>👁️ Trénink očí</h2></div>
+      <p class="muted" style="line-height:1.5">Vedená cvičení pro namáhané oči: uvolnění, pohyblivost a trénink ostření (akomodace). Pár minut denně — nejlíp po delší práci na blízko.</p>
+      <button class="tech-btn" onclick="startMedById('eyerelax')"><b>🤲 Palming — hluboké uvolnění</b><span>2,5 min · teplo a tma pro unavené oči</span></button>
+      <button class="tech-btn" onclick="startMedById('eyefocus')"><b>🔭 Ostření blízko–daleko</b><span>2,5 min · pumpa pro sval, který ostří</span></button>
+      <button class="tech-btn" onclick="startMedById('eyemove')"><b>🔄 Oční jóga — pohyby</b><span>2,5 min · nahoru/dolů, kruhy, osmičky</span></button>
+      <button class="tech-btn" onclick="startMedById('eyepump')"><b>🎺 Akomodační pumpa</b><span>2,5 min · protažení rozsahu ostření</span></button>
+    </div>
+    <div class="card">
+      <div class="sec-h"><h2>🖥️ Návyky, které oči šetří</h2></div>
+      <div class="sleep-step"><div class="g-num">1</div><div class="g-txt"><b>Pravidlo 20-20-20:</b> každých 20 minut práce na blízko se na 20 vteřin podívej aspoň 6 metrů daleko.</div></div>
+      <div class="sleep-step"><div class="g-num">2</div><div class="g-txt"><b>Mrkej.</b> U obrazovky mrkáme třikrát míň — proto oči pálí a sychnou. Občas vědomě pomalu zamrkej.</div></div>
+      <div class="sleep-step"><div class="g-num">3</div><div class="g-txt"><b>Světlo:</b> na čtení hodně a zezadu/zboku, ne obrazovka ve tmě.</div></div>
+      <div class="sleep-step"><div class="g-num">4</div><div class="g-txt"><b>Choď ven:</b> pohled do dálky je pro oči přirozený odpočinek, který uvnitř nemají.</div></div>
+      <div class="sleep-step"><div class="g-num">5</div><div class="g-txt"><b>Drž čtecí vzdálenost:</b> text dál od očí a větší písmo je menší dřina než přimhouřené louskání zblízka.</div></div>
+      <p class="muted" style="margin-top:10px;font-size:.72rem;line-height:1.5">Poctivě: vetchozrakost (presbyopie) vzniká tuhnutím oční čočky věkem — žádné cvičení ji nezvrátí a sliby o „vyléčení" jsou marketing. Co trénink umí: ulevit od únavy a pálení, udržet pružnost ostření a oddálit chvíli, kdy tě obtěžuje. Brýle na čtení nejsou prohra a pravidelná kontrola u očního lékaře patří k výbavě.</p>
     </div>
   </div>
 
@@ -999,6 +1021,39 @@ const MEDS = [
    ["Když tě proud strhne a plaveš s myšlenkou, v klidu se vrať na břeh a pokládej dál.",35],
    ["Potok teče dál i bez tebe. Ty jen sedíš na břehu a díváš se.",30],
    ["Otevři oči. Ten břeh máš v hlavě kdykoli po ruce.",12]]},
+ {id:"eyerelax", cat:"e", ico:"🤲", title:"Palming", dur:"2,5 min",
+  steps:[
+   ["Zahřej si dlaně — třicet vteřin je tři o sebe, dokud nehřejí.",25],
+   ["Zavři oči a přilož na ně dlaně jako misky. Prsty se kříží na čele, na oči žádný tlak.",20],
+   ["Úplná tma a teplo. Oči odpočívají nejlíp, když nemají co dělat.",30],
+   ["Dýchej pomalu. S každým výdechem povol obočí, víčka i čelist.",30],
+   ["Zůstaň tak a nech tmu pracovat. Nikam nespěchej.",40],
+   ["Pomalu dlaně odejmi, nech oči přivyknout světlu a párkrát pomalu zamrkej.",15]]},
+ {id:"eyefocus", cat:"e", ico:"🔭", title:"Ostření blízko–daleko", dur:"2,5 min",
+  steps:[
+   ["Sedni si tak, ať vidíš aspoň šest metrů daleko — ideálně k oknu. Zvedni palec dvacet centimetrů před oči.",20],
+   ["Zaostři na palec a dvě vteřiny drž ostrost.",10],
+   ["Přeostři do dálky — na strom, dům, obzor. Dvě vteřiny.",10],
+   ["A zpátky na palec… a do dálky. Střídej vlastním tempem: nádech blízko, výdech daleko.",40],
+   ["Pokračuj, deset až patnáct přeostření. Cítíš to jemné táhnutí? Pracuje sval, který ostří.",40],
+   ["Na závěr nech pohled volně v dálce a párkrát pomalu zamrkej.",15]]},
+ {id:"eyemove", cat:"e", ico:"🔄", title:"Oční jóga", dur:"2,5 min",
+  steps:[
+   ["Sedni si rovně. Hlava se celou dobu nehýbe — pracují jen oči.",12],
+   ["Pomalu nahoru… a dolů. Pětkrát, plynule, bez trhání.",25],
+   ["Doleva… a doprava. Pětkrát, do krajních poloh, ale bez tlaku.",25],
+   ["Teď pomalé kroužení po směru hodinových ručiček — tři velké kruhy.",25],
+   ["A tři kruhy proti směru. Pomalost je důležitější než rozsah.",25],
+   ["Ležatá osmička: opisuj ji očima, třikrát tam a zpět.",25],
+   ["Zavři oči na deset vteřin a nech je vydechnout. Hotovo.",15]]},
+ {id:"eyepump", cat:"e", ico:"🎺", title:"Akomodační pumpa", dur:"2,5 min",
+  steps:[
+   ["Vezmi si text s drobným písmem — knihu nebo telefon — a drž ho na délku natažené paže.",15],
+   ["Pomalu ho přibližuj k očím, dokud se písmo nezačne rozmazávat. Tam se zastav.",20],
+   ["Kousek ho oddal, aby bylo písmo zase ostré, a pár vteřin ostrost podrž.",20],
+   ["A znovu: pomalu blíž až k rozmazání… a zpátky k ostrosti. Jako trombon.",35],
+   ["Pokračuj vlastním tempem. Právě protahuješ rozsah, ve kterém oči umí zaostřit.",40],
+   ["Na konec se podívej do dálky a nech oči úplně povolit.",15]]},
  {id:"felt", amb:"pink", ico:"🫀", title:"Kde to sedí", dur:"4 min",
   steps:[
    ["Tohle cvičení hledá odpověď tam, kde bývá — v těle. Sedni si pohodlně a zavři oči.",15],
