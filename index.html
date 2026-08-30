@@ -148,6 +148,7 @@
       <button class="root-tile" onclick="openDet('learn')"><span class="r-ico">📚</span><span class="r-name">Učení</span><span class="r-sub">soustředění · bloky · paměť</span></button>
       <button class="root-tile" onclick="openDet('guides')"><span class="r-ico">📖</span><span class="r-name">Rádce</span><span class="r-sub">úzkost · chutě · motivace · lenost</span></button>
       <button class="root-tile" onclick="openDet('eyes')"><span class="r-ico">👁️</span><span class="r-name">Oči</span><span class="r-sub">úleva · ostření · trénink</span></button>
+      <button class="root-tile" onclick="openDet('veins')"><span class="r-ico">🩸</span><span class="r-name">Cévy a žíly</span><span class="r-sub">nohy · prokrvení · návyky</span></button>
     </div>
     <p class="muted" id="mind-count" style="margin-top:14px;text-align:center;font-size:.78rem"></p>
   </div>
@@ -180,6 +181,27 @@
       <div class="sleep-step"><div class="g-num">4</div><div class="g-txt"><b>Choď ven:</b> pohled do dálky je pro oči přirozený odpočinek, který uvnitř nemají.</div></div>
       <div class="sleep-step"><div class="g-num">5</div><div class="g-txt"><b>Drž čtecí vzdálenost:</b> text dál od očí a větší písmo je menší dřina než přimhouřené louskání zblízka.</div></div>
       <p class="muted" style="margin-top:10px;font-size:.72rem;line-height:1.5">Poctivě: vetchozrakost (presbyopie) vzniká tuhnutím oční čočky věkem — žádné cvičení ji nezvrátí a sliby o „vyléčení" jsou marketing. Co trénink umí: ulevit od únavy a pálení, udržet pružnost ostření a oddálit chvíli, kdy tě obtěžuje. Brýle na čtení nejsou prohra a pravidelná kontrola u očního lékaře patří k výbavě.</p>
+    </div>
+  </div>
+
+  <div class="section" id="det-veins">
+    <button class="btn ghost small" style="margin-bottom:12px" onclick="goHome()">← Menu</button>
+    <div class="card">
+      <div class="sec-h"><h2>🩸 Cvičení na cévy a žíly</h2></div>
+      <p class="muted" style="line-height:1.5">Domácí žilní a cévní gymnastika — lýtko je „druhé srdce“ a dá se trénovat. Pár minut denně, ideálně po dlouhém sezení nebo stání.</p>
+      <button class="tech-btn" onclick="startMedById('veinlegs')"><b>🦵 Žilní pumpa — nohy</b><span>3 min · kotníky, výpony, pochod — žene krev zpátky nahoru</span></button>
+      <button class="tech-btn" onclick="startMedById('vessels')"><b>🔄 Cévní gymnastika (polohová)</b><span>4 min · nahoru–pumpuj–svěsit–ležet · trénink prokrvení</span></button>
+      <button class="tech-btn" onclick="startMedById('headflow')"><b>🧠 Šíje, dech a hlava</b><span>3 min · uvolnění cesty krve do hlavy, masáž, klidný dech</span></button>
+    </div>
+    <div class="card">
+      <div class="sec-h"><h2>🚶 Návyky pro zdravé cévy</h2></div>
+      <div class="sleep-step"><div class="g-num">1</div><div class="g-txt"><b>Každou hodinu se hýbni:</b> 2 minuty chůze nebo aspoň kotníková pumpa v sedě. Dlouhé sezení je pro žíly nejhorší.</div></div>
+      <div class="sleep-step"><div class="g-num">2</div><div class="g-txt"><b>30 minut chůze denně</b> — nejlepší lék pro žíly v nohách i cévy v mozku. Bez výjimky nejúčinnější věc z celé této stránky.</div></div>
+      <div class="sleep-step"><div class="g-num">3</div><div class="g-txt"><b>Večer nohy nahoru</b> na 15 minut nad úroveň srdce.</div></div>
+      <div class="sleep-step"><div class="g-num">4</div><div class="g-txt"><b>Střídavá sprcha na lýtka:</b> teplá–studená, vždy studenou končit. Cévy trénuje stahování a povolování.</div></div>
+      <div class="sleep-step"><div class="g-num">5</div><div class="g-txt"><b>Pij vodu</b> — hustá krev teče špatně. A pozor na křížení nohou při dlouhém sezení.</div></div>
+      <div class="sleep-step"><div class="g-num">6</div><div class="g-txt"><b>Pro mozkové cévy</b> žádný trik neexistuje — rozhoduje pohyb, spánek, krevní tlak a nekouření. Všechno ostatní je marketing.</div></div>
+      <p class="muted" style="margin-top:10px;font-size:.72rem;line-height:1.5">⚠️ Důležité: náhlý otok jedné nohy, bolest nebo zateplení lýtka — necvičit a hned k lékaři (může jít o trombózu). Při závažnějším cévním onemocnění, vysokém tlaku nebo po operacích prober cviky nejdřív s lékařem. A rychlé kroužení hlavou nedělej — krční tepny ho nemají rády.</p>
     </div>
   </div>
 
@@ -1021,6 +1043,30 @@ const MEDS = [
    ["Když tě proud strhne a plaveš s myšlenkou, v klidu se vrať na břeh a pokládej dál.",35],
    ["Potok teče dál i bez tebe. Ty jen sedíš na břehu a díváš se.",30],
    ["Otevři oči. Ten břeh máš v hlavě kdykoli po ruce.",12]]},
+ {id:"veinlegs", cat:"v", ico:"🦵", title:"Žilní pumpa — nohy", dur:"3 min",
+  steps:[
+   ["Sedni si nebo si lehni a paty opři o podložku. Spouštíme pumpu, která žene krev z nohou zpátky k srdci.",18],
+   ["Přitáhni špičky k sobě… a propni od sebe. Pomalu, v plném rozsahu, oběma nohama. Opakuj dvacetkrát.",40],
+   ["Teď kroužení v kotnících: deset kruhů dovnitř… a deset ven.",35],
+   ["Postav se, nebo zůstaň sedět, a zvedej paty: výpon na špičky… a pomalu dolů. Patnáctkrát. Lýtko je druhé srdce — právě pumpuje.",40],
+   ["Střídavě propínej kolena, jako bys pomalu pochodoval na místě. Dvacet kroků.",35],
+   ["Na závěr si zvedni nohy nad úroveň srdce — na polštář nebo opěradlo — a nech je pár minut odpočívat.",25]]},
+ {id:"vessels", cat:"v", ico:"🔄", title:"Cévní gymnastika", dur:"4 min",
+  steps:[
+   ["Polohové cvičení na prokrvení nohou. Lehni si na záda a zvedni nohy nahoru — klidně opřené o zeď.",20],
+   ["Se zvednutýma nohama pumpuj: přitahuj a propínej špičky, kruž kotníky. Vydrž tak minutu, dokud neucítíš mírnou únavu v lýtkách.",55],
+   ["Posaď se a nohy volně svěs dolů, přes okraj postele nebo židle. Nech je prokrvit — pozoruj, jak růžoví. Minutu.",50],
+   ["Lehni si zpátky, nohy naplocho, a minutu jen klidně dýchej. Tohle bylo jedno kolo.",50],
+   ["Máš-li čas a síly, dej celé kolo ještě jednou: nahoru a pumpovat… svěsit… ležet.",60],
+   ["Hotovo. Střídání odkrvení a prokrvení je trénink pro cévy. Při vážnějších cévních potížích ho ale nejdřív prober s lékařem.",25]]},
+ {id:"headflow", cat:"v", ico:"🧠", title:"Šíje, dech a hlava", dur:"3 min",
+  steps:[
+   ["Krev do hlavy vede přes šíji — a ztuhlá šíje je jako přiškrcená hadice. Sedni si rovně, ramena stáhni dolů.",20],
+   ["Pomalu ukloň hlavu k pravému rameni a deset vteřin drž… a teď k levému. Žádné rychlé kroužení hlavou — krční tepny ho nemají rády.",35],
+   ["Bradu pomalu k hrudníku a protáhni zadní stranu krku. Deset vteřin.",20],
+   ["Kruž rameny dozadu — pět velkých pomalých kruhů… a pět dopředu.",25],
+   ["Konečky prstů si krouživě promasíruj spánky, čelo a temeno. Půl minuty — prokrvuje a příjemně uvolňuje.",35],
+   ["A nakonec dech: pět pomalých nádechů do břicha, výdech vždy delší než nádech. Klidný dech je nejlepší regulátor tlaku, který máš pořád u sebe.",35]]},
  {id:"eyerelax", cat:"e", ico:"🤲", title:"Palming", dur:"2,5 min",
   steps:[
    ["Zahřej si dlaně — třicet vteřin je tři o sebe, dokud nehřejí.",25],
