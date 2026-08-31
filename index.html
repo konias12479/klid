@@ -149,6 +149,7 @@
       <button class="root-tile" onclick="openDet('guides')"><span class="r-ico">📖</span><span class="r-name">Rádce</span><span class="r-sub">úzkost · chutě · motivace · lenost</span></button>
       <button class="root-tile" onclick="openDet('eyes')"><span class="r-ico">👁️</span><span class="r-name">Oči</span><span class="r-sub">úleva · ostření · trénink</span></button>
       <button class="root-tile" onclick="openDet('veins')"><span class="r-ico">🩸</span><span class="r-name">Cévy a žíly</span><span class="r-sub">nohy · prokrvení · návyky</span></button>
+      
     </div>
     <p class="muted" id="mind-count" style="margin-top:14px;text-align:center;font-size:.78rem"></p>
   </div>
@@ -204,6 +205,8 @@
       <p class="muted" style="margin-top:10px;font-size:.72rem;line-height:1.5">⚠️ Důležité: náhlý otok jedné nohy, bolest nebo zateplení lýtka — necvičit a hned k lékaři (může jít o trombózu). Při závažnějším cévním onemocnění, vysokém tlaku nebo po operacích prober cviky nejdřív s lékařem. A rychlé kroužení hlavou nedělej — krční tepny ho nemají rády.</p>
     </div>
   </div>
+
+  
 
   <div class="section" id="det-med">
     <button class="btn ghost small" style="margin-bottom:12px" onclick="goHome()">← Menu</button>
@@ -1658,6 +1661,8 @@ function openGuide(i){
   $("guide-ov").classList.remove("hidden");
 }
 function closeGuide(){ $("guide-ov").classList.add("hidden"); }
+
+
 
 /* ================= START ================= */
 function boot(){
