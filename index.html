@@ -138,6 +138,41 @@
   .gull2{animation:gullFly 31s ease-in-out infinite alternate-reverse}
   @keyframes gullFly{from{transform:translate(0,0)}to{transform:translate(34px,-8px)}}
   @media (prefers-reduced-motion:reduce){.sun-rays,.cloud1,.cloud2,.cloud3,.wave-a,.wave-b,.wave-c,.boat,.gull1,.gull2,.scene-layers{animation:none}}
+
+  /* ---------- ukázka cviku: postavička předvádí, co dělat ---------- */
+  .fig-card{background:rgba(255,253,246,.92);border:1.5px solid rgba(255,255,255,.5);border-radius:14px;
+    box-shadow:0 8px 30px rgba(20,26,44,.35);margin:14px 0 0;padding:4px 6px 0}
+  .fig-card svg{display:block;width:100%;height:auto;max-height:180px;margin:0 auto}
+  .fig-card.hidden{display:none}
+  .fx{transform-box:view-box}
+  @keyframes fxFlex{0%,100%{transform:rotate(-30deg)}50%{transform:rotate(16deg)}}
+  @keyframes fxCircle{0%{transform:rotate(-20deg) translateY(2px)}25%{transform:rotate(-2deg) translateY(-4px)}
+    50%{transform:rotate(18deg) translateY(2px)}75%{transform:rotate(-2deg) translateY(6px)}100%{transform:rotate(-20deg) translateY(2px)}}
+  @keyframes fxRise{0%,100%{transform:translateY(0)}45%,65%{transform:translateY(-9px)}}
+  @keyframes fxHeel{0%,100%{transform:rotate(0)}45%,65%{transform:rotate(-28deg)}}
+  @keyframes fxLegA{0%,100%{transform:rotate(0)}50%{transform:rotate(-32deg)}}
+  @keyframes fxLegB{0%,100%{transform:rotate(-32deg)}50%{transform:rotate(0)}}
+  @keyframes fxTilt{0%,100%{transform:rotate(-14deg)}50%{transform:rotate(14deg)}}
+  @keyframes fxChin{0%,15%{transform:rotate(0)}45%,80%{transform:rotate(24deg)}100%{transform:rotate(0)}}
+  @keyframes fxRound{0%{transform:translate(0,0)}25%{transform:translate(0,-4px)}50%{transform:translate(-4px,0)}
+    75%{transform:translate(0,4px)}100%{transform:translate(0,0)}}
+  @keyframes fxRub{0%{transform:translate(0,0)}25%{transform:translate(2px,-2px)}50%{transform:translate(0,-3px)}
+    75%{transform:translate(-2px,-2px)}100%{transform:translate(0,0)}}
+  @keyframes fxBreath{0%,100%{transform:scale(1)}50%{transform:scale(1.09)}}
+  @keyframes fxSway{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(5deg)}}
+  .fx-flex{animation:fxFlex 3.2s ease-in-out infinite}
+  .fx-circle{animation:fxCircle 4s linear infinite}
+  .fx-rise{animation:fxRise 3.4s ease-in-out infinite}
+  .fx-heel{animation:fxHeel 3.4s ease-in-out infinite}
+  .fx-legA{animation:fxLegA 2.6s ease-in-out infinite}
+  .fx-legB{animation:fxLegB 2.6s ease-in-out infinite}
+  .fx-tilt{animation:fxTilt 7s ease-in-out infinite}
+  .fx-chin{animation:fxChin 6s ease-in-out infinite}
+  .fx-round{animation:fxRound 4.5s linear infinite}
+  .fx-round2{animation:fxRound 4.5s linear infinite reverse}
+  .fx-rub{animation:fxRub 1.6s linear infinite}
+  .fx-breath{animation:fxBreath 7s ease-in-out infinite}
+  .fx-sway{animation:fxSway 5s ease-in-out infinite}
   .root-tile:nth-child(4n+1){background:#f2fafb}
   .root-tile:nth-child(4n+2){background:#fffdf6}
   .root-tile:nth-child(4n+3){background:#f0f8ef}
@@ -549,6 +584,7 @@
       <div id="med-run" class="hidden">
         <p class="muted" id="med-progress" style="margin-top:4px"></p>
         <button class="btn ghost small" id="med-music-btn" style="margin-top:8px" onclick="openMedOptions()">🎚️ Zvuk a podkres</button>
+        <div class="fig-card hidden" id="med-figure"></div>
         <div class="med-step" id="med-text"></div>
         <div class="surf-timer" id="med-timer"></div>
         <button class="btn ghost" onclick="medSkip()">Další krok</button>
@@ -1151,6 +1187,7 @@ const MEDS = [
    ["Potok teče dál i bez tebe. Ty jen sedíš na břehu a díváš se.",30],
    ["Otevři oči. Ten břeh máš v hlavě kdykoli po ruce.",12]]},
  {id:"veinlegs", cat:"v", ico:"🦵", title:"Žilní pumpa — nohy", dur:"3 min",
+  anim:["sit","flex","circle","raise","march","elevate"],
   steps:[
    ["Sedni si nebo si lehni a paty opři o podložku. Spouštíme pumpu, která žene krev z nohou zpátky k srdci.",18],
    ["Přitáhni špičky k sobě… a propni od sebe. Pomalu, v plném rozsahu, oběma nohama. Opakuj dvacetkrát.",40],
@@ -1159,6 +1196,7 @@ const MEDS = [
    ["Střídavě propínej kolena, jako bys pomalu pochodoval na místě. Dvacet kroků.",35],
    ["Na závěr si zvedni nohy nad úroveň srdce — na polštář nebo opěradlo — a nech je pár minut odpočívat.",25]]},
  {id:"vessels", cat:"v", ico:"🔄", title:"Cévní gymnastika", dur:"4 min",
+  anim:["wallup","wallpump","dangle","lieflat","wallup","sit"],
   steps:[
    ["Polohové cvičení na prokrvení nohou. Lehni si na záda a zvedni nohy nahoru — klidně opřené o zeď.",20],
    ["Se zvednutýma nohama pumpuj: přitahuj a propínej špičky, kruž kotníky. Vydrž tak minutu, dokud neucítíš mírnou únavu v lýtkách.",55],
@@ -1167,6 +1205,7 @@ const MEDS = [
    ["Máš-li čas a síly, dej celé kolo ještě jednou: nahoru a pumpovat… svěsit… ležet.",60],
    ["Hotovo. Střídání odkrvení a prokrvení je trénink pro cévy. Při vážnějších cévních potížích ho ale nejdřív prober s lékařem.",25]]},
  {id:"headflow", cat:"v", ico:"🧠", title:"Šíje, dech a hlava", dur:"3 min",
+  anim:["front","neck","chin","shoulders","temples","breath"],
   steps:[
    ["Krev do hlavy vede přes šíji — a ztuhlá šíje je jako přiškrcená hadice. Sedni si rovně, ramena stáhni dolů.",20],
    ["Pomalu ukloň hlavu k pravému rameni a deset vteřin drž… a teď k levému. Žádné rychlé kroužení hlavou — krční tepny ho nemají rády.",35],
@@ -1439,11 +1478,185 @@ function beginMed(kind){
   startMedMusic();
   runMedStep();
 }
+/* ===== UKÁZKY CVIKŮ — animovaná postavička =====
+   Cviky na cévy se slovy popisují blbě, tak u každého kroku ukazuje
+   postavička, co dělat. Kreslené v duchu úvodní scény: jednoduché
+   tvary, kulaté konce, pomalý pohyb. */
+const FGO="#243b5e",                       /* obrys — všechno je linkované, aby to bylo kreslené */
+      FGS="#e2673a", FGS2="#c65128",       /* tričko */
+      FGP="#3a5a91", FGP2="#2c4470",       /* kraťasy */
+      FGK="#f6c9a0",                       /* pleť */
+      FGH="#5b3f2a",                       /* vlasy */
+      FGSH="#f4f1e8",                      /* bota */
+      FGW="#c9a97c", FGD="#1c3557";
+/* každá scéna má vlastní výřez, aby postava vyplnila rámeček — poměr stran
+   držíme stejný (4:3), takže rámeček mezi kroky neposkakuje */
+const FG_O=(vb)=>'<svg viewBox="'+(vb||"0 0 220 150")+'" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">', FG_C='</svg>';
+const FG_SHADOW=(cx,cy,rx)=>'<ellipse cx="'+cx+'" cy="'+cy+'" rx="'+rx+'" ry="5.5" fill="#1c3557" opacity=".11"/>';
+const VB_SIT="16 24 160 120", VB_STAND="30 22 160 120", VB_LIE="22 48 176 132",
+      VB_WALL="28 30 160 120", VB_BED="14 18 160 120", VB_FRONT="30 22 160 120";
+const FG_WALL='<line x1="174" y1="20" x2="174" y2="136" stroke="#dfe8e0" stroke-width="7" stroke-linecap="round"/>';
+const FG_CHAIR='<path d="M44 97 L98 97" stroke="'+FGW+'" stroke-width="7" stroke-linecap="round"/>'+
+ '<path d="M46 96 L46 58" stroke="'+FGW+'" stroke-width="7" stroke-linecap="round"/>'+
+ '<path d="M52 100 L52 136" stroke="'+FGW+'" stroke-width="5" stroke-linecap="round"/>'+
+ '<path d="M94 100 L94 136" stroke="'+FGW+'" stroke-width="5" stroke-linecap="round"/>';
+/* končetina = tlustý tah s obrysem: nejdřív tmavá linka, pak barva přes ni */
+function fgL(d,w,col){
+  return '<path d="'+d+'" fill="none" stroke="'+FGO+'" stroke-width="'+(w+5)+'" stroke-linecap="round" stroke-linejoin="round"/>'+
+   '<path d="'+d+'" fill="none" stroke="'+col+'" stroke-width="'+w+'" stroke-linecap="round" stroke-linejoin="round"/>';
+}
+function fgShoe(x,y,s){ /* pata v (x,y), špička ve směru s (1 doprava) */
+  s = s || 1;
+  return '<path d="M'+x+' '+(y-9)+' q'+(9*s)+' 0 '+(12*s)+' 4 q'+(6*s)+' 2 '+(7*s)+' 6 q0 3 -'+(5*s)+' 3 l-'+(14*s)+' 0 q-'+(5*s)+' 0 -'+(5*s)+' -5 Z"'+
+   ' fill="'+FGSH+'" stroke="'+FGO+'" stroke-width="2.8" stroke-linejoin="round"/>';
+}
+function fgHand(x,y){ return '<circle cx="'+x+'" cy="'+y+'" r="6" fill="'+FGK+'" stroke="'+FGO+'" stroke-width="2.6"/>'; }
+
+function fgHeadSide(x,y){ /* z profilu, dívá se doprava */
+  return '<g transform="translate('+x+','+y+')">'+
+   '<circle r="15" fill="'+FGK+'" stroke="'+FGO+'" stroke-width="3"/>'+
+   '<path d="M-15 -3 Q-17 6 -11 11 Q-6 6 -8 -2 Z" fill="'+FGH+'" stroke="'+FGO+'" stroke-width="2.4" stroke-linejoin="round"/>'+
+   '<path d="M-15 -2 A15 15 0 0 1 15 -2 Q9 -10 0 -10 Q-9 -10 -15 -2 Z" fill="'+FGH+'" stroke="'+FGO+'" stroke-width="2.6" stroke-linejoin="round"/>'+
+   '<path d="M-6 1 q-3.5 0 -3.5 3.5 q0 3.5 3.5 3.5" fill="none" stroke="'+FGO+'" stroke-width="2" stroke-linecap="round"/>'+
+   '<path d="M3 -6 q4 -2 7 0.5" stroke="'+FGO+'" stroke-width="2" fill="none" stroke-linecap="round"/>'+
+   '<ellipse cx="6.5" cy="0.5" rx="2" ry="2.6" fill="'+FGO+'"/>'+
+   '<circle cx="4" cy="7" r="3.4" fill="#ef9d78" opacity=".5"/>'+
+   '<path d="M4 7 q4.5 3.5 8 -1.5" stroke="'+FGO+'" stroke-width="2.2" fill="none" stroke-linecap="round"/>'+
+   '</g>';
+}
+function fgHeadFront(){
+  return '<g transform="translate(110,46)">'+
+   '<circle cx="-15.5" cy="2" r="4.2" fill="'+FGK+'" stroke="'+FGO+'" stroke-width="2.3"/>'+
+   '<circle cx="15.5" cy="2" r="4.2" fill="'+FGK+'" stroke="'+FGO+'" stroke-width="2.3"/>'+
+   '<circle r="15" fill="'+FGK+'" stroke="'+FGO+'" stroke-width="3"/>'+
+   '<path d="M-15 -2 A15 15 0 0 1 15 -2 Q9 -9 0 -9 Q-9 -9 -15 -2 Z" fill="'+FGH+'" stroke="'+FGO+'" stroke-width="2.6" stroke-linejoin="round"/>'+
+   '<path d="M-9.5 -5 q3.5 -2 6.5 -0.5 M3 -5.5 q3 -1.5 6.5 0.5" stroke="'+FGO+'" stroke-width="2" fill="none" stroke-linecap="round"/>'+
+   '<ellipse cx="-5.5" cy="1" rx="2" ry="2.6" fill="'+FGO+'"/><ellipse cx="5.5" cy="1" rx="2" ry="2.6" fill="'+FGO+'"/>'+
+   '<circle cx="-9.5" cy="7" r="3.4" fill="#ef9d78" opacity=".5"/><circle cx="9.5" cy="7" r="3.4" fill="#ef9d78" opacity=".5"/>'+
+   '<path d="M-5 8 q5 4.5 10 0" stroke="'+FGO+'" stroke-width="2.2" fill="none" stroke-linecap="round"/>'+
+   '</g>';
+}
+const FG_TORSO_F='<path d="M92 84 Q110 73 128 84 L136 150 L84 150 Z" fill="'+FGS+'" stroke="'+FGO+'" stroke-width="3" stroke-linejoin="round"/>'+
+ '<path d="M101 80 q9 9 18 0" fill="none" stroke="'+FGO+'" stroke-width="2.6" stroke-linecap="round"/>';
+const FG_NECK_F='<path d="M103 54 L103 82 L117 82 L117 54 Z" fill="'+FGK+'" stroke="'+FGO+'" stroke-width="2.6" stroke-linejoin="round"/>';
+
+function fgSeated(o){ /* sed na židli z profilu */
+  o = o || {};
+  return FG_SHADOW(92,138,50)+FG_CHAIR+
+   fgL("M66 93 L110 95",15,FGP)+
+   fgL("M110 95 L112 120",12,FGK)+
+   '<g class="fx '+(o.foot||'')+'" style="transform-origin:112px 124px">'+fgShoe(108,127,1)+'</g>'+
+   (o.hint||'')+
+   fgL("M66 95 L63 64",22,FGS)+
+   '<path d="M55 66 q9 7 17 -1" fill="none" stroke="'+FGO+'" stroke-width="2.6" stroke-linecap="round"/>'+
+   '<g class="fx '+(o.head||'')+'" style="transform-origin:64px 62px">'+fgHeadSide(63,45)+'</g>'+
+   fgL("M67 76 Q80 86 84 94",11,FGK)+fgHand(85,96);
+}
+function fgLeg(cls,col){ /* celá noha otáčená v kyčli — pochod na místě */
+  return '<g class="fx '+cls+'" style="transform-origin:100px 92px">'+
+   fgL("M100 92 L100 112",15,col)+fgL("M100 112 L101 130",12,FGK)+fgShoe(97,137,1)+'</g>';
+}
+function fgLying(o){ /* leh na zádech, hlava vlevo */
+  o = o || {};
+  return '<g transform="rotate(-72 46 118)">'+fgHeadSide(46,118)+'</g>'+
+   fgL("M74 128 Q92 135 106 130",11,FGK)+fgHand(108,129);
+}
+function fgArmF(side){ /* paže podél těla, čelní pohled; side -1 vlevo, 1 vpravo */
+  const sh = 110 + side*15, el = 110 + side*25, wr = 110 + side*27;
+  return fgL("M"+sh+" 88 Q"+el+" 104 "+wr+" 119",11,FGK)+
+   '<path d="M'+(110+side*11)+' 82 q'+(side*11)+' 3 '+(side*9)+' 13" fill="none" stroke="'+FGO+'" stroke-width="16" stroke-linecap="round"/>'+
+   '<path d="M'+(110+side*11)+' 82 q'+(side*11)+' 3 '+(side*9)+' 13" fill="none" stroke="'+FGS+'" stroke-width="11" stroke-linecap="round"/>'+
+   fgHand(wr,123);
+}
+function fgArmsF(){ return fgArmF(-1)+fgArmF(1); }
+const FIGS = {
+  /* — žilní pumpa — */
+  sit:    ()=>FG_O(VB_SIT)+fgSeated({})+FG_C,
+  flex:   ()=>FG_O(VB_SIT)+fgSeated({foot:"fx-flex"})+FG_C,
+  circle: ()=>FG_O(VB_SIT)+fgSeated({foot:"fx-circle",
+            hint:'<ellipse cx="132" cy="124" rx="12" ry="9" fill="none" stroke="#9fc4d6" stroke-width="2" stroke-dasharray="4 4"/>'})+FG_C,
+  raise:  ()=>FG_O(VB_STAND)+FG_SHADOW(110,138,26)+
+            '<g class="fx fx-rise">'+
+              fgL("M100 92 L100 112",15,FGP)+fgL("M100 112 L101 130",12,FGK)+
+              fgL("M100 94 L98 62",22,FGS)+
+              '<path d="M90 64 q9 7 17 -1" fill="none" stroke="'+FGO+'" stroke-width="2.6" stroke-linecap="round"/>'+
+              fgHeadSide(98,44)+
+              fgL("M99 76 Q94 90 93 101",11,FGK)+fgHand(93,104)+'</g>'+
+            '<g class="fx fx-heel" style="transform-origin:118px 137px">'+fgShoe(97,137,1)+'</g>'+FG_C,
+  march:  ()=>FG_O(VB_STAND)+FG_SHADOW(104,138,28)+fgLeg("fx-legB",FGP2)+
+            fgL("M100 94 L98 62",22,FGS)+
+            '<path d="M90 64 q9 7 17 -1" fill="none" stroke="'+FGO+'" stroke-width="2.6" stroke-linecap="round"/>'+
+            fgLeg("fx-legA",FGP)+fgHeadSide(98,44)+
+            '<g class="fx fx-legB" style="transform-origin:99px 74px">'+
+              fgL("M99 74 Q92 88 91 99",11,FGK)+fgHand(91,102)+'</g>'+FG_C,
+  elevate:()=>FG_O(VB_LIE)+FG_SHADOW(115,134,72)+
+            '<rect x="126" y="94" width="64" height="26" rx="13" fill="#f2dfae" stroke="'+FGO+'" stroke-width="2.8"/>'+
+            fgL("M62 119 L112 121",22,FGS)+
+            fgL("M112 121 L146 102",15,FGP)+
+            fgL("M146 102 L174 96",12,FGK)+
+            '<g transform="rotate(-58 175 96)">'+fgShoe(171,101,1)+'</g>'+
+            fgLying()+FG_C,
+  /* — cévní gymnastika — */
+  wallup:  ()=>FG_O(VB_WALL)+FG_WALL+FG_SHADOW(95,135,62)+fgWallLegs("")+fgLying()+FG_C,
+  wallpump:()=>FG_O(VB_WALL)+FG_WALL+FG_SHADOW(95,135,62)+fgWallLegs("fx-flex")+fgLying()+FG_C,
+  dangle: ()=>FG_O(VB_BED)+FG_SHADOW(70,139,50)+
+            '<rect x="22" y="86" width="96" height="50" rx="8" fill="#efe7d6" stroke="'+FGO+'" stroke-width="2.8"/>'+
+            '<path d="M22 98 L118 98" fill="none" stroke="'+FGO+'" stroke-width="2" opacity=".5"/>'+
+            '<g class="fx fx-sway" style="transform-origin:104px 88px">'+
+              fgL("M104 88 L112 109",15,FGP)+fgL("M112 109 L115 127",12,FGK)+fgShoe(112,134,1)+'</g>'+
+            fgL("M104 88 L101 58",22,FGS)+
+            '<path d="M93 60 q9 7 17 -1" fill="none" stroke="'+FGO+'" stroke-width="2.6" stroke-linecap="round"/>'+
+            fgHeadSide(101,39)+
+            fgL("M105 72 Q117 80 121 88",11,FGK)+fgHand(122,90)+FG_C,
+  lieflat:()=>FG_O(VB_LIE)+FG_SHADOW(118,134,74)+
+            fgL("M60 120 L128 122",22,FGS)+
+            fgL("M128 122 L152 123",15,FGP)+
+            fgL("M152 123 L178 124",12,FGK)+
+            '<g transform="rotate(-62 179 124)">'+fgShoe(175,129,1)+'</g>'+
+            '<ellipse class="fx fx-breath" style="transform-origin:104px 116px" cx="104" cy="116" rx="17" ry="11" fill="#ffffff" opacity=".3"/>'+
+            fgLying()+FG_C,
+  /* — šíje, dech a hlava — */
+  front:  ()=>FG_O(VB_FRONT)+FG_NECK_F+FG_TORSO_F+fgArmsF()+fgHeadFront()+FG_C,
+  neck:   ()=>FG_O(VB_FRONT)+FG_NECK_F+FG_TORSO_F+fgArmsF()+
+            '<g class="fx fx-tilt" style="transform-origin:110px 66px">'+fgHeadFront()+'</g>'+FG_C,
+  chin:   ()=>FG_O(VB_SIT)+fgSeated({head:"fx-chin"})+FG_C,
+  shoulders:()=>FG_O(VB_FRONT)+FG_NECK_F+FG_TORSO_F+
+            '<g class="fx fx-round" style="transform-origin:95px 88px">'+fgArmF(-1)+'</g>'+
+            '<g class="fx fx-round2" style="transform-origin:125px 88px">'+fgArmF(1)+'</g>'+
+            fgHeadFront()+FG_C,
+  temples:()=>FG_O(VB_FRONT)+FG_NECK_F+FG_TORSO_F+
+            '<path d="M96 92 Q84 70 95 55" stroke="'+FGS2+'" stroke-width="10" fill="none" stroke-linecap="round"/>'+
+            '<path d="M124 92 Q136 70 125 55" stroke="'+FGS2+'" stroke-width="10" fill="none" stroke-linecap="round"/>'+
+            fgHeadFront()+
+            '<g class="fx fx-rub"><circle cx="95" cy="51" r="6" fill="'+FGK+'"/></g>'+
+            '<g class="fx fx-rub" style="animation-delay:-.8s"><circle cx="125" cy="51" r="6" fill="'+FGK+'"/></g>'+FG_C,
+  breath: ()=>FG_O(VB_FRONT)+FG_NECK_F+FG_TORSO_F+
+            '<ellipse class="fx fx-breath" style="transform-origin:110px 116px" cx="110" cy="116" rx="19" ry="13" fill="#ffffff" opacity=".32"/>'+
+            '<path d="M96 90 Q92 112 103 120" stroke="'+FGS2+'" stroke-width="10" fill="none" stroke-linecap="round"/>'+
+            '<path d="M124 90 Q128 112 117 120" stroke="'+FGS2+'" stroke-width="10" fill="none" stroke-linecap="round"/>'+
+            '<circle cx="104" cy="122" r="6" fill="'+FGK+'"/><circle cx="116" cy="122" r="6" fill="'+FGK+'"/>'+
+            fgHeadFront()+FG_C
+};
+function fgWallLegs(footCls){ /* leh, nohy nahoru opřené o zeď */
+  return fgL("M60 120 L124 124",22,FGS)+
+   fgL("M124 124 L142 86",15,FGP)+
+   fgL("M142 86 L154 50",12,FGK)+
+   '<g class="fx '+footCls+'" style="transform-origin:154px 50px">'+
+     '<g transform="rotate(-72 154 50)">'+fgShoe(150,55,1)+'</g></g>';
+}
+function setMedFigure(){
+  const box = $("med-figure"); if(!box) return;
+  const M = MEDS[medIdx];
+  const key = (M && M.anim) ? M.anim[medStep] : null;
+  if(key && FIGS[key]){ box.innerHTML = FIGS[key](); box.classList.remove("hidden"); }
+  else { box.innerHTML = ""; box.classList.add("hidden"); }
+}
 function runMedStep(){
   const M = MEDS[medIdx];
   if(medStep >= M.steps.length){ medEnd(true); return; }
   $("med-progress").textContent = "Krok " + (medStep+1) + " z " + M.steps.length;
   $("med-text").textContent = M.steps[medStep][0];
+  setMedFigure();
   if(!medUseCustom) say(M.steps[medStep][0]);
   medRemain = M.steps[medStep][1];
   $("med-timer").textContent = medRemain + " s";
@@ -1459,6 +1672,8 @@ function medEnd(completed){
   clearInterval(medInt); hush(); stopMedMusic();
   if(medCustomAudio){ try{ medCustomAudio.pause(); }catch(e){} medCustomAudio = null; }
   medUseCustom = false;
+  const figBox = $("med-figure");
+  if(figBox){ figBox.innerHTML = ""; figBox.classList.add("hidden"); }
   $("med-ov").classList.add("hidden");
   if(completed){
     S.mindCount = (S.mindCount||0) + 1;
